@@ -12,7 +12,6 @@ import org.example.springminiproject.Model.OPT.OptsDTO;
 import org.example.springminiproject.Security.JwtService;
 import org.example.springminiproject.Service.AppUserService.AppUserService;
 import org.example.springminiproject.Service.MailService.EmailService;
-import org.example.springminiproject.Service.MailService.MailSenderService;
 import org.example.springminiproject.Service.MailService.OptGenerator;
 import org.example.springminiproject.Service.OptService.OptService;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    private final MailSenderService mailSenderService;
     private final OptService optService;
     private final EmailService emailService;
 
@@ -104,7 +102,6 @@ public class AuthController {
     private void authenticate(String email, String password) throws Exception {
         try {
             UserDetails userDetails = appUserService.loadUserByUsername(email);
-//            System.out.println("UserDetail : " + userDetails);
             if (userDetails == null) {
                 throw new BadRequestException("User not found");
             }

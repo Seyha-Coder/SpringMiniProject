@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private final Path path = Paths.get("src/main/resources/profile_images");
+    private final Path path = Paths.get("src/main/resources/image-profiles");
 
     @Override
     public String saveFile(MultipartFile file) throws IOException {
@@ -36,4 +36,3 @@ public class FileServiceImpl implements FileService {
         return new ByteArrayResource(Files.readAllBytes(rootPath));
     }
 }
-

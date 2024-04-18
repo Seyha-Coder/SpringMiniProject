@@ -1,6 +1,7 @@
 package org.example.springminiproject.Service.MailService;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.example.springminiproject.Model.OPT.OptsDTO;
 
 import java.util.Date;
@@ -22,4 +23,5 @@ public class OptGenerator {
     }
 
 }
+
 
