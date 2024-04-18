@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>OTP Email</title>
+    <style>
+        body {
+            background-color:#6db33f;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            background-color: white;
+            text-align: center;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0.1, 0.1);
+        }
+
+        .otp-code {
+            background-color: #6db33f;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .resend-btn {
+            background-color: #6db33f;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .resend-btn:hover {
+            background-color: #6db33f;
+        }
+
+        .message {
+            color: #6b7280;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>OTP Email</h1>
+    <p>Your One Time Password (OTP) is:</p>
+    <div class="otp-code" th:text="${otp}">123456</div>
+    <button class="resend-btn">Resend OTP</button>
+    <p class="message">Don't share this OTP with anyone.</p>
+</div>
+</body>
+</html>
