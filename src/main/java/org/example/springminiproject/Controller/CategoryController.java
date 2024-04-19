@@ -1,4 +1,5 @@
 package org.example.springminiproject.Controller;
+import jakarta.validation.Valid;
 import org.example.springminiproject.Model.AppUserModel.CustomUserDetails;
 import org.example.springminiproject.Model.Category.Category;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,8 +28,8 @@ public class CategoryController {
     }
     @GetMapping
     public ResponseEntity<?> getAllCategory(
-                                            @RequestParam(defaultValue = "1") Integer offset,
-                                            @RequestParam(defaultValue = "5") Integer limit){
+                                            @Positive(message = "Limit cannot be negative or zero") @RequestParam(defaultValue = "1") Integer offset,
+                                            @Positive(message = "Limit cannot be negative or zero") @RequestParam(defaultValue = "5") Integer limit){
         List<Category> category = categoryService.getAllCategory(offset,limit);
         APIResponseCategory<?> response = new APIResponseCategory<>(
                 "The category is get category all successfully",
@@ -50,9 +51,8 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest){
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequest categoryRequest){
         UUID userId = getUserUserOfCurrentUser();
-//        System.out.println("uuu"+email);
         Category category = categoryService.createCategory(categoryRequest,userId);
         APIResponseCategory<?> response = new APIResponseCategory<>(
                 "The category is create successfully ",
@@ -70,7 +70,7 @@ public class CategoryController {
         return userDetails.getAppUserDTO().getUserId();
     }
     @PutMapping("{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable UUID id , @RequestBody CategoryRequest categoryRequest){
+    public ResponseEntity<?> updateCategory(@PathVariable UUID id , @Valid @RequestBody CategoryRequest categoryRequest){
         Category category = categoryService.updateCategory(id,categoryRequest);
         APIResponseCategory<?> response = new APIResponseCategory<>(
                 "The category is update successfully",

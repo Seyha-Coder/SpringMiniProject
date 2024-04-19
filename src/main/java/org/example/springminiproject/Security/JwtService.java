@@ -40,11 +40,13 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
-//        CustomUserDetails customUserDetails = new CustomUserDetails();
-        claims.put("userId", "aa728e00-8f58-4b0a-aafb-44944a10da18");
-        claims.put("profileImage", "aa728e00-8f58-4b0a-aafb-44944a10da18");
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        claims.put("userId", customUserDetails.getAppUserDTO().getUserId());
+        claims.put("profileImage", customUserDetails.getAppUserDTO().getProfileImage());
+
         return createToken(claims, userDetails.getUsername());
     }
+
 
     private Claims extractAllClaim(String token) {
         return Jwts.parser()

@@ -22,7 +22,7 @@ public class GlobalException{
     public ProblemDetail handlerAllNotFoundException(AllNotfoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setType(URI.create("about:blank"));
-        problemDetail.setTitle("Venue Not Found");
+        problemDetail.setTitle("Not Found");
         problemDetail.setStatus(404);
         problemDetail.setDetail(e.getMessage());
         problemDetail.setProperty("timestamp", LocalDateTime.now());

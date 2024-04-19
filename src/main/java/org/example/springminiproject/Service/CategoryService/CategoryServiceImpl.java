@@ -1,5 +1,7 @@
 package org.example.springminiproject.Service.CategoryService;
 
+import jakarta.validation.Valid;
+import org.example.springminiproject.Exception.AllNotfoundException;
 import org.example.springminiproject.Model.AppUserModel.AppUser;
 import org.example.springminiproject.Model.AppUserModel.AppUserDTO;
 import org.example.springminiproject.Model.Category.Category;
@@ -29,26 +31,33 @@ public class  CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(UUID id) {
-        return categoryRepository.getCategoryById(id);
+        Category response = categoryRepository.getCategoryById(id);
+        System.out.println(response);
+        if (response == null){
+            throw new AllNotfoundException("The category id " + id + " has not been founded.");
+        }
+        return response;
     }
 
     @Override
-    public Category createCategory(CategoryRequest categoryRequest, UUID userId) {
-//        categoryRequest.setUsersId(1);
+    public Category createCategory(
+            @Valid CategoryRequest categoryRequest,
+            UUID userId
+    ) {
         AppUserDTO appUserDTO = appUserRepository.findByEmail(String.valueOf(userId));
-
-//        categoryRequest.setUserId(appUserDTO.getUserId());
         return categoryRepository.createCategory(categoryRequest, userId);
     }
 
     @Override
     public Category updateCategory(UUID id, CategoryRequest categoryRequest) {
+        getCategoryById(id);
         AppUserDTO appUserDTO =appUserRepository.findByEmail(String.valueOf(id));
         return categoryRepository.updateCategory(id,categoryRequest);
     }
 
     @Override
     public Category deleteCategory(UUID id) {
+        getCategoryById(id);
         return categoryRepository.deleteCategory(id);
     }
 }

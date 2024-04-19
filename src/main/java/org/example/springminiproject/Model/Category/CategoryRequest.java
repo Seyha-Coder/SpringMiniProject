@@ -1,5 +1,7 @@
 package org.example.springminiproject.Model.Category;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryRequest {
+    @NotBlank
+    @NotNull(message = "must not be blank")
     private String name;
+    @NotBlank
+    @NotNull(message = "must not be blank")
     private String description;
 
 }

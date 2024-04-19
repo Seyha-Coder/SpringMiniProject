@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.example.springminiproject.Exception.AllNotfoundException;
 import org.example.springminiproject.Exception.BadRequestException;
 import org.example.springminiproject.Model.ApiResponse.ApiResponse;
@@ -93,7 +94,7 @@ public class AuthController {
 
     @PostMapping("/resend")
     public ResponseEntity<ApiResponse<AppUserDTO>> resend(
-            @NotNull @NotBlank @Email(message = "Invalid email") String email
+            @NotNull @NotBlank @Email(message = "Invalid email") @RequestParam String email
     ) throws MessagingException, IOException {
         AppUserDTO appUserDTO = appUserService.findUserByEmail(email);
         if (appUserDTO == null){
@@ -115,7 +116,7 @@ public class AuthController {
     public ResponseEntity<?> register(@Valid @RequestBody AppUserRequest appUserRequest) throws MessagingException, IOException {
         List<String> VALID_IMAGE_FORMATS = Arrays.asList("jpeg", "jpg", "png", "gif");
         String imageEx = appUserRequest.getProfileImage().substring(appUserRequest.getProfileImage().lastIndexOf(".") + 1);
-        if (VALID_IMAGE_FORMATS.contains(imageEx)){
+        if (!VALID_IMAGE_FORMATS.contains(imageEx)){
             throw new BadRequestException("profile must be contain file extension such as jpg, png, gif and bmp only");
         }
         String encodedPassword = passwordEncoder.encode(appUserRequest.getPassword());
@@ -166,12 +167,5 @@ public class AuthController {
             throw new Exception("Invalid credentials", e);
         }
     }
-
-    @GetMapping("getById/{id}")
-    public ResponseEntity<?> getById(@PathVariable UUID id){
-        AppUserDTO appUserDTO = appUserService.getById(id);
-        return ResponseEntity.ok(appUserDTO);
-    }
-
 }
 
