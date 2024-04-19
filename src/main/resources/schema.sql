@@ -1,4 +1,5 @@
-CREATE DATABASE expense_tracking;
+-- CREATE DATABASE expense_tracking;
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE Users
 (
@@ -43,3 +44,5 @@ CREATE TABLE Otps
     user_id    uuid,
     FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
 );
+
+SELECT * FROM otps;

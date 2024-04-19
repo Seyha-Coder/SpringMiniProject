@@ -9,6 +9,9 @@ import org.example.springminiproject.Repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
 @Service
 public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
@@ -26,4 +29,15 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserDTO createUser(AppUserRequest appUserRequest) {
         return appUserRepository.saveUser(appUserRequest);
     }
+
+    @Override
+    public AppUserDTO findUserByEmail(String email) {
+        return appUserRepository.findByEmail(email);
+    }
+
+    @Override
+    public AppUserDTO updatePassword(String password, UUID userId) {
+        return appUserRepository.updatePassword(password, userId);
+    }
+
 }

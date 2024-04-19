@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Update;
 import org.example.springminiproject.Model.OPT.OptsDTO;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Mapper
 public interface OneTimePasswordRepository {
@@ -28,4 +29,9 @@ public interface OneTimePasswordRepository {
             UPDATE otps SET verified = true WHERE opt_code = #{code}
             """)
     void save(String code);
+
+    @Update("""
+            UPDATE otps SET verified = false, opt_code = #{code} WHERE user_id = #{userId}
+            """)
+    void resend(String code, UUID userId);
 }
