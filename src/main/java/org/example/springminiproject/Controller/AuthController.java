@@ -1,13 +1,20 @@
 package org.example.springminiproject.Controller;
 
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
+import org.example.springminiproject.Exception.AllNotfoundException;
+import org.example.springminiproject.Exception.BadRequestException;
 import org.example.springminiproject.Model.ApiResponse.ApiResponse;
 import org.example.springminiproject.Model.AppUserModel.AppUserDTO;
 import org.example.springminiproject.Model.AppUserModel.AppUserRequest;
 import org.example.springminiproject.Model.Auth.AuthRequest;
 import org.example.springminiproject.Model.Auth.AuthResponse;
+import org.example.springminiproject.Model.Auth.PasswordRequest;
 import org.example.springminiproject.Model.OPT.OptsDTO;
 import org.example.springminiproject.Security.JwtService;
 import org.example.springminiproject.Service.AppUserService.AppUserService;
@@ -28,6 +35,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.*;
 
 @RequestMapping("/api/v1/auths")
 @RestController
@@ -43,7 +51,9 @@ public class AuthController {
 
 
     @PutMapping("/verify")
-    public String verify(@RequestBody String OptCode) {
+    public String verify(
+           @Positive(message = "Otp code cannot be negative or zero") @RequestParam String OptCode
+    ) {
         Optional<OptsDTO> optional = optService.findByCode(OptCode);
         optional.ifPresent(c -> {
             String verificationResult;
@@ -60,17 +70,54 @@ public class AuthController {
     }
 
     @PutMapping("/forget")
-    public String forget() {
-        return "forgot password";
+    public ResponseEntity<?> forget(
+            @NotNull @NotBlank @Email(message = "Invalid email") @RequestParam String email,
+            @Valid @RequestBody PasswordRequest passwordRequest
+    ) {
+        AppUserDTO appUserDTO = appUserService.findUserByEmail(email);
+        if (appUserDTO == null){
+            throw new AllNotfoundException("Invalid email");
+        } else if (!Objects.equals(passwordRequest.getPassword(), passwordRequest.getConfirmPassword())) {
+            throw new BadRequestException("Your confirm password does not match with your password");
+        }
+        String encodedPassword = passwordEncoder.encode(passwordRequest.getPassword());
+        AppUserDTO result = appUserService.updatePassword(encodedPassword, appUserDTO.getUserId());
+        ApiResponse<AppUserDTO> response = ApiResponse.<AppUserDTO>builder()
+                .message("New password was updated successfully!")
+                .code(200)
+                .status(HttpStatus.CREATED)
+                .payload(appUserDTO)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("resend")
-    public String resend() {
-        return "resent password";
+    @PostMapping("/resend")
+    public ResponseEntity<ApiResponse<AppUserDTO>> resend(
+            @NotNull @NotBlank @Email(message = "Invalid email") String email
+    ) throws MessagingException, IOException {
+        AppUserDTO appUserDTO = appUserService.findUserByEmail(email);
+        if (appUserDTO == null){
+            throw new AllNotfoundException("Invalid email");
+        }
+        OptsDTO optsDTO = OptGenerator.generateOTP(6,appUserDTO.getUserId());
+        optService.resendOpt(optsDTO.getOptCode(), appUserDTO.getUserId());
+        emailService.sendEmail(appUserDTO.getEmail(),optsDTO.getOptCode());
+        ApiResponse<AppUserDTO> response = ApiResponse.<AppUserDTO>builder()
+                .message("New OTP was send successfully!")
+                .code(200)
+                .status(HttpStatus.CREATED)
+                .payload(appUserDTO)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("register")
-    public ResponseEntity<?> register(@RequestBody AppUserRequest appUserRequest) throws MessagingException, IOException {
+    public ResponseEntity<?> register(@Valid @RequestBody AppUserRequest appUserRequest) throws MessagingException, IOException {
+        List<String> VALID_IMAGE_FORMATS = Arrays.asList("jpeg", "jpg", "png", "gif");
+        String imageEx = appUserRequest.getProfileImage().substring(appUserRequest.getProfileImage().lastIndexOf(".") + 1);
+        if (VALID_IMAGE_FORMATS.contains(imageEx)){
+            throw new BadRequestException("profile must be contain file extension such as jpg, png, gif and bmp only");
+        }
         String encodedPassword = passwordEncoder.encode(appUserRequest.getPassword());
         appUserRequest.setPassword(encodedPassword);
         AppUserDTO appUserDTO = appUserService.createUser(appUserRequest);
@@ -91,12 +138,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest) throws Exception {
+        AppUserDTO user = appUserService.findUserByEmail(authRequest.getEmail());
+        if(user == null){
+            throw new AllNotfoundException("Invalid email");
+        }
         authenticate(authRequest.getEmail(), authRequest.getPassword());
         final UserDetails userDetails = appUserService.loadUserByUsername(authRequest.getEmail());
         final String token = jwtService.generateToken(userDetails);
         AuthResponse authResponse = new AuthResponse(token);
-
         return ResponseEntity.ok(authResponse);
     }
 
@@ -106,10 +156,8 @@ public class AuthController {
             if (userDetails == null) {
                 throw new BadRequestException("User not found");
             }
-
-            System.out.println(passwordEncoder.matches(password, userDetails.getPassword()));
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                throw new BadCredentialsException("Invalid password");
+                throw new AllNotfoundException("Invalid Password");
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         } catch (DisabledException e) {

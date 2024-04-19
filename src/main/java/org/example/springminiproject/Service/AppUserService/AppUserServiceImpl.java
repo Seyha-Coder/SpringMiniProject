@@ -30,6 +30,17 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUserDTO findUserByEmail(String email) {
+        return appUserRepository.findByEmail(email);
+    }
+
+    @Override
+    public AppUserDTO updatePassword(String password, UUID userId) {
+        return appUserRepository.updatePassword(password, userId);
+    }
+
+
+    @Override
     public AppUserDTO getById(UUID id) {
         return appUserRepository.getUserById(id);
     }

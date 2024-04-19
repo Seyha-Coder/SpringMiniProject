@@ -6,6 +6,7 @@ import org.example.springminiproject.Repository.OneTimePasswordRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Data
@@ -37,5 +38,11 @@ public class OptServiceImpl implements OptService {
     public void uploadOpt(String optCode) {
         oneTimePasswordRepository.save(optCode);
     }
+
+    @Override
+    public void resendOpt(String code, UUID userId) {
+        oneTimePasswordRepository.resend(code, userId);
+    }
+
 
 }

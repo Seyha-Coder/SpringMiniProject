@@ -10,5 +10,9 @@ import java.util.UUID;
 
 public interface AppUserService extends UserDetailsService {
     AppUserDTO createUser(AppUserRequest appUserRequest);
+
+    AppUserDTO findUserByEmail(String email);
+
+    AppUserDTO updatePassword(String password, UUID userId);
     public AppUserDTO getById(UUID id);
 }
