@@ -1,12 +1,9 @@
 package org.example.springminiproject.Repository;
 
 import org.apache.ibatis.annotations.Mapper;
-
 import org.apache.ibatis.annotations.*;
-
 import org.apache.ibatis.type.JdbcType;
 import org.example.springminiproject.Exception.UuidTypeHandler;
-import org.example.springminiproject.Model.AppUserModel.AppUser;
 import org.example.springminiproject.Model.AppUserModel.AppUserDTO;
 import org.example.springminiproject.Model.AppUserModel.AppUserRequest;
 
@@ -27,5 +24,6 @@ public interface AppUserRepository {
             """)
     @ResultMap("AppUserMapping")
     AppUserDTO findByEmail(@Param("email") String email);
+
 }
 
