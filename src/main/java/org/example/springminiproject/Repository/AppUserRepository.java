@@ -7,6 +7,8 @@ import org.example.springminiproject.Exception.UuidTypeHandler;
 import org.example.springminiproject.Model.AppUserModel.AppUserDTO;
 import org.example.springminiproject.Model.AppUserModel.AppUserRequest;
 
+import java.util.UUID;
+
 
 @Mapper
 public interface AppUserRepository {
@@ -24,6 +26,11 @@ public interface AppUserRepository {
             """)
     @ResultMap("AppUserMapping")
     AppUserDTO findByEmail(@Param("email") String email);
+
+    @Select("""
+            UPDATE users SET password = #{password} WHERE user_id = #{userId} RETURNING *
+            """)
+    AppUserDTO updatePassword(String password, UUID userId);
 
 }
 
