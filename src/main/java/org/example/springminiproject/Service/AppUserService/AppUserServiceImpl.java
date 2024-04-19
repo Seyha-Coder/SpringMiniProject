@@ -21,7 +21,6 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUserDTO appUser = appUserRepository.findByEmail(email);
-        System.out.println(appUser);
         return new CustomUserDetails(appUser);
     }
 
@@ -38,6 +37,12 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUserDTO updatePassword(String password, UUID userId) {
         return appUserRepository.updatePassword(password, userId);
+    }
+
+
+    @Override
+    public AppUserDTO getById(UUID id) {
+        return appUserRepository.getUserById(id);
     }
 
 }

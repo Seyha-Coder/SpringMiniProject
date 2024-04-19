@@ -20,13 +20,14 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0.1, 0.1);
         }
         .title{
-            color: blue;
+            color: green;
+            text-align: center;
         }
         .guidline{
-            color: blue;
+            color: black;
         }
         .code {
-            background-color: blue;
+            background-color: green;
             font-weight: bold;
             padding: 10px 20px;
             color: white;
@@ -35,26 +36,9 @@
             margin-top: 20px;
         }
 
-        .resend {
-            background-color: blue;
-            color: white;
-            margin-top: 20px;
-            font-size: 16px;
-            padding: 10px 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .resend:hover {
-            background-color: dodgerblue;
-            color: whitesmoke;
-        }
 
         .message {
-            color: yellow;
+            color: black;
             margin-top: 20px;
             font-weight: bold;
         }
@@ -62,11 +46,10 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="title">OTP Email</h1>
-    <p class="guidline">Your One-Time Password (OTP) is:</p>
+    <h1 class="title">Expense Tracking</h1>
+    <p class="guidline">Before you sign in, we need to verify your identity. Enter the following code on the sign-in page.</p>
     <div class="code" th:text="${otp}">123456</div>
-    <button class="resend">Resend OTP</button>
-    <p class="message">Don't share this OTP with anyone.</p>
+    <p class="message">Welcome to the Expense Tracking Application. Here, you can monitor your expenses and manage your budget effectively.</p>
 </div>
 </body>
 </html>

@@ -14,4 +14,5 @@ public interface AppUserService extends UserDetailsService {
     AppUserDTO findUserByEmail(String email);
 
     AppUserDTO updatePassword(String password, UUID userId);
+    public AppUserDTO getById(UUID id);
 }

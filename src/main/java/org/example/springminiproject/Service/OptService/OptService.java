@@ -12,4 +12,5 @@ public interface OptService {
     Optional<OptsDTO> findByCode(String code);
     void uploadOpt(String optCode);
     void resendOpt(String code, UUID userId);
+    void verify(String optCode);
 }

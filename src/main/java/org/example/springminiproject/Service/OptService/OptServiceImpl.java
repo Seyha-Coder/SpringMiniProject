@@ -43,6 +43,10 @@ public class OptServiceImpl implements OptService {
     public void resendOpt(String code, UUID userId) {
         oneTimePasswordRepository.resend(code, userId);
     }
-
+    @Override
+    public void verify(String optCode) {
+        System.out.println(optCode);
+        oneTimePasswordRepository.verify(optCode);
+    }
 
 }

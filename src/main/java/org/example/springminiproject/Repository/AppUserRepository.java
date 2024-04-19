@@ -32,5 +32,13 @@ public interface AppUserRepository {
             """)
     AppUserDTO updatePassword(String password, UUID userId);
 
+    @Select("""
+    
+    SELECT  * FROM users
+     WHERE user_id = #{id}::uuid;
+    """)
+    @ResultMap("AppUserMapping")
+    AppUserDTO getUserById(@Param("id") UUID id);
+
 }
 

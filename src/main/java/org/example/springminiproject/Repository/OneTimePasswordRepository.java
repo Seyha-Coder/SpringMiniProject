@@ -34,4 +34,9 @@ public interface OneTimePasswordRepository {
             UPDATE otps SET verified = false, opt_code = #{code} WHERE user_id = #{userId}
             """)
     void resend(String code, UUID userId);
+
+    @Update("""
+            UPDATE otps SET verified = true WHERE opt_code = #{optCode}
+            """)
+    void verify(String optCode);
 }

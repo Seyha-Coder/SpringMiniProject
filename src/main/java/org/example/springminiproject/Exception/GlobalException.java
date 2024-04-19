@@ -17,23 +17,13 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class GlobalException{
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+
     @ExceptionHandler({AllNotfoundException.class})
     public ProblemDetail handlerAllNotFoundException(AllNotfoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setType(URI.create("about:blank"));
         problemDetail.setTitle("Not Found");
         problemDetail.setStatus(404);
-        problemDetail.setDetail(e.getMessage());
-        problemDetail.setProperty("timestamp", LocalDateTime.now());
-        return problemDetail;
-    }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({BadRequestException.class})
-    public ProblemDetail handlerInvalidException(BadRequestException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
-        problemDetail.setType(URI.create("about:blank"));
-        problemDetail.setTitle("Bad Request");
-        problemDetail.setStatus(400);
         problemDetail.setDetail(e.getMessage());
         problemDetail.setProperty("timestamp", LocalDateTime.now());
         return problemDetail;
