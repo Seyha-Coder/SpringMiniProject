@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequestMapping("/api/v1/auths")
 @RestController
@@ -118,6 +119,11 @@ public class AuthController {
         }
     }
 
+    @GetMapping("getById/{id}")
+    public ResponseEntity<?> getById(@PathVariable UUID id){
+        AppUserDTO appUserDTO = appUserService.getById(id);
+        return ResponseEntity.ok(appUserDTO);
+    }
 
 }
 

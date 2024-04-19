@@ -6,9 +6,10 @@ import org.apache.ibatis.annotations.*;
 
 import org.apache.ibatis.type.JdbcType;
 import org.example.springminiproject.Exception.UuidTypeHandler;
-import org.example.springminiproject.Model.AppUserModel.AppUser;
 import org.example.springminiproject.Model.AppUserModel.AppUserDTO;
 import org.example.springminiproject.Model.AppUserModel.AppUserRequest;
+
+import java.util.UUID;
 
 
 @Mapper
@@ -27,5 +28,12 @@ public interface AppUserRepository {
             """)
     @ResultMap("AppUserMapping")
     AppUserDTO findByEmail(@Param("email") String email);
+    @Select("""
+    
+    SELECT  * FROM users
+     WHERE user_id = #{id}::uuid;
+    """)
+    @ResultMap("AppUserMapping")
+    AppUserDTO getUserById(@Param("id") UUID id);
 }
 

@@ -9,6 +9,9 @@ import org.example.springminiproject.Repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
 @Service
 public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
@@ -18,7 +21,6 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUserDTO appUser = appUserRepository.findByEmail(email);
-        System.out.println(appUser);
         return new CustomUserDetails(appUser);
     }
 
@@ -26,4 +28,10 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserDTO createUser(AppUserRequest appUserRequest) {
         return appUserRepository.saveUser(appUserRequest);
     }
+
+    @Override
+    public AppUserDTO getById(UUID id) {
+        return appUserRepository.getUserById(id);
+    }
+
 }

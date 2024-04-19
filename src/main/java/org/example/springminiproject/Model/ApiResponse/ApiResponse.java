@@ -1,5 +1,6 @@
 package org.example.springminiproject.Model.ApiResponse;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +11,12 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class ApiResponse<T> {
     private String message;
     private HttpStatus status;
     private Integer code;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T payload;
 
 }
